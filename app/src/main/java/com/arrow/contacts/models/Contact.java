@@ -4,7 +4,8 @@ import java.util.ArrayList;
 
 public class Contact {
     private int id;
-    private String firstLetter, pinYin;
+    private int imageID;
+    private String firstLetter, pinYin, name;
     private String prefix, firstName, middleName, surName, suffix;
     private String photoUri;
     private String phoneNumber;
@@ -27,6 +28,14 @@ public class Contact {
         this.notes = notes;
     }
 
+    public Contact(String name, String number, String pinYin, String firstLetter, int imageID) {
+        this.name = name;
+        this.phoneNumber = number;
+        this.pinYin = pinYin;
+        this.imageID = imageID;
+        this.firstLetter = firstLetter;
+    }
+
     public void setPinYin(String pinYin) {
         this.pinYin = pinYin;
     }
@@ -41,5 +50,13 @@ public class Contact {
 
     public String getFirstLetter() {
         return firstLetter;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getImageID() {
+        return imageID;
     }
 }

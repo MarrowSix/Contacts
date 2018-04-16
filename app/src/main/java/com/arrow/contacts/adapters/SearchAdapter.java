@@ -15,11 +15,10 @@ import com.arrow.contacts.models.Contact;
 
 import java.util.List;
 
-public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHolder> implements SectionIndexer {
+public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder>  implements SectionIndexer {
     private List<Contact> mContactList;
 
     static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView firstLetter;
         TextView name;
         ImageView photo;
         View contactView;
@@ -27,21 +26,20 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
         public ViewHolder(View view) {
             super(view);
             contactView = view;
-            firstLetter = (TextView) view.findViewById(R.id.prefix_letter);
             name = (TextView) view.findViewById(R.id.name_textView);
             photo = (ImageView) view.findViewById(R.id.image_view);
         }
     }
 
-    public ContactAdapter(List<Contact> contactList) {
+    public SearchAdapter(List<Contact> contactList) {
         mContactList = contactList;
     }
 
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_view_contact, parent, false);
-        final ViewHolder holder = new ViewHolder(view);
+    public  ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_search_contact, parent, false);
+        final SearchAdapter.ViewHolder holder = new SearchAdapter.ViewHolder(view);
 
         holder.contactView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -55,23 +53,10 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull SearchAdapter.ViewHolder holder, int position) {
         Contact person = mContactList.get(position);
         holder.name.setText(person.getName());
         holder.photo.setImageResource(person.getImageID());
-
-        //获得当前position是属于哪个分组
-        int sectionForPosition = getSectionForPosition(position);
-        //获得该分组第一项的position
-        int positionForSection = getPositionForSection(sectionForPosition);
-        //查看当前position是不是当前item所在分组的第一个item
-        //如果是，则显示showLetter，否则隐藏
-        if (position == positionForSection) {
-            holder.firstLetter.setText(person.getFirstLetter());
-            holder.firstLetter.setTextColor(Color.rgb(63, 81, 181));
-        } else {
-            holder.firstLetter.setTextColor(Color.alpha(100));
-        }
     }
 
     @Override
