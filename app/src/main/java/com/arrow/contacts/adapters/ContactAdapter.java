@@ -1,5 +1,6 @@
 package com.arrow.contacts.adapters;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -39,7 +40,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
 
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull final ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_view_contact, parent, false);
         final ViewHolder holder = new ViewHolder(view);
 
@@ -48,6 +49,8 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
             public void onClick(View v) {
                 int position = holder.getAdapterPosition();
                 Contact person = mContactList.get(position);
+                Intent intent = new Intent("com.arrow.contacts.activities.ACTION_START");
+                parent.getContext().startActivity(intent);
             }
         });
 
@@ -68,7 +71,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
         //如果是，则显示showLetter，否则隐藏
         if (position == positionForSection) {
             holder.firstLetter.setText(person.getFirstLetter());
-            holder.firstLetter.setTextColor(Color.rgb(63, 81, 181));
+            holder.firstLetter.setTextColor(Color.rgb(136, 136, 136));
         } else {
             holder.firstLetter.setTextColor(Color.alpha(100));
         }

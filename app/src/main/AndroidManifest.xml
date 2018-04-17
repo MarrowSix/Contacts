@@ -25,7 +25,15 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.ViewContactActivity"></activity>
+        <activity
+            android:name=".activities.ContactActivity"
+            android:theme="@style/AppTheme.ViewBar"
+            >
+            <intent-filter>
+                <action android:name="com.arrow.contacts.activities.ACTION_START"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>
