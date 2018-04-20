@@ -23,9 +23,6 @@ import com.bumptech.glide.Glide;
 public class ContactActivity extends AppCompatActivity {
 
     public static final String CONTACT = "contact";
-    public static final String CONTACT_NAME = "contact_name";
-    public static final String CONTACT_PHOTO_ID  = "contact_photo_id";
-    public static final String CONTACT_NUMBER = "contact_number";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,9 +47,6 @@ public class ContactActivity extends AppCompatActivity {
         }
 
         Intent intent = getIntent();
-//        String contactName = intent.getStringExtra(CONTACT_NAME);
-//        String contactNumber = intent.getStringExtra(CONTACT_NUMBER);
-//        int contactPhotoID = intent.getIntExtra(CONTACT_PHOTO_ID, 0);
         Contact person = (Contact) intent.getSerializableExtra(CONTACT);
 
         CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
@@ -65,7 +59,7 @@ public class ContactActivity extends AppCompatActivity {
 //        Drawable drawable = getDrawable(contactPhotoID);
 //        Matrix matrix = new Matrix();
 
-        // contactNumberTextView.setText(person.getPhoneNumber().get(0));
+        contactNumberTextView.setText(person.getPhoneNumber().get(0));
 
     }
 

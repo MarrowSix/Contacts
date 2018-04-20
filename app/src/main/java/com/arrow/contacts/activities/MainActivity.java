@@ -251,6 +251,9 @@ public class MainActivity extends AppCompatActivity
                         contactNumber.add(phoneCursor.getString(phoneCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER)));
                     } while (phoneCursor.moveToNext());
                 }
+
+                
+
                 // 根据联系人的名字来决定其默认图标
                 int tempIndex = 0;
                 for (int i=0; i<contactName.length(); i++) {

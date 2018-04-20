@@ -1,11 +1,11 @@
 package com.arrow.contacts.models;
 
-public class Email {
+public class PhoneNumber {
     private String value;
     private int type;
 
-    public Email(String value, int type) {
-        this.value = value;
+    public PhoneNumber(String number, int type) {
+        this.value = number;
         this.type = type;
     }
 
