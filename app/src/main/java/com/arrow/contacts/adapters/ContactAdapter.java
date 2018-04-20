@@ -56,9 +56,6 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
                 Contact person = mContactList.get(position);
                 Intent intent = new Intent("com.arrow.contacts.activities.ACTION_START");
                 intent.putExtra(ContactActivity.CONTACT, person);
-//                intent.putExtra(ContactActivity.CONTACT_NAME, person.getName());
-//                intent.putExtra(ContactActivity.CONTACT_PHOTO_ID, person.getImageID());
-//                intent.putExtra(ContactActivity.CONTACT_NUMBER, person.getPhoneNumber());
                 parent.getContext().startActivity(intent);
             }
         });

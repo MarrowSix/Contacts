@@ -61,18 +61,10 @@ public class MainActivity extends AppCompatActivity
         if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.READ_CONTACTS)
                 != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(MainActivity.this,
-                    new String[] { Manifest.permission.READ_CONTACTS }, 1);
+                    new String[] { Manifest.permission.READ_CONTACTS, Manifest.permission.READ_CALL_LOG }, 1);
         } else {
             readContacts();
         }
-
-        recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(layoutManager);
-
-        contactAdapter = new ContactAdapter(contactList);
-        recyclerView.setAdapter(contactAdapter);
-
     }
 
     @Override
@@ -150,8 +142,6 @@ public class MainActivity extends AppCompatActivity
             case 1:
                 if (grantResults.length>0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     readContacts();
-                    ContactAdapter tempAdapter = new ContactAdapter(contactList);
-                    recyclerView.setAdapter(tempAdapter);
                 } else {
                     Toast.makeText(this, "You denied the permisssion", Toast.LENGTH_SHORT).show();
                 }
@@ -292,6 +282,7 @@ public class MainActivity extends AppCompatActivity
                 Contact person = new Contact(contactName, contactNumber, numberType, emails, emailsType, convert, subString, R.mipmap.timg, id);
                 contactList.add(person);
             }
+            cursor.close();
         }
 
         Collections.sort(contactList, new Comparator<Contact>() {
@@ -307,6 +298,13 @@ public class MainActivity extends AppCompatActivity
 
             }
         });
+
+        recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
+
+        contactAdapter = new ContactAdapter(contactList);
+        recyclerView.setAdapter(contactAdapter);
     }
 
     private void searchContacts(String query) {

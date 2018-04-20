@@ -139,7 +139,7 @@
                                 <PersistentState>
                                   <option name="values">
                                     <map>
-                                      <entry key="url" value="jar:file:/C:/Program%20Files/Android/Android%20Studio/plugins/android/lib/android.jar!/images/material_design_icons/communication/ic_email_black_24dp.xml" />
+                                      <entry key="url" value="jar:file:/C:/Program%20Files/Android/Android%20Studio/plugins/android/lib/android.jar!/images/material_design_icons/communication/ic_call_missed_black_24dp.xml" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -149,8 +149,8 @@
                         </option>
                         <option name="values">
                           <map>
-                            <entry key="color" value="888888" />
-                            <entry key="outputName" value="ic_email" />
+                            <entry key="color" value="ff0000" />
+                            <entry key="outputName" value="ic_call_missed" />
                             <entry key="overrideSize" value="true" />
                             <entry key="sourceFile" value="C:\Users\Arrow" />
                           </map>

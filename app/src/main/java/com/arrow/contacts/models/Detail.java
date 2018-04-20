@@ -1,12 +1,7 @@
 package com.arrow.contacts.models;
 
-import java.util.List;
-
 public class Detail {
-//    private List<String> phoneNumber;
-//    private List<Integer> phoneType;
-//    private List<String> emails;
-//    private List<Integer> emailsType;
+
     private String value;
     private Integer type;
     private String prefix;
@@ -68,26 +63,4 @@ public class Detail {
         return backIconId;
     }
 
-    //    public Detail(List<String> phoneNumber, List<Integer> phoneType, List<String> emails, List<Integer> emailsType) {
-//        this.phoneNumber = phoneNumber;
-//        this.phoneType = phoneType;
-//        this.emails = emails;
-//        this.emailsType = emailsType;
-//    }
-
-//    public List<String> getPhoneNumber() {
-//        return phoneNumber;
-//    }
-//
-//    public List<Integer> getPhoneType() {
-//        return phoneType;
-//    }
-//
-//    public List<String> getEmails() {
-//        return emails;
-//    }
-//
-//    public List<Integer> getEmailsType() {
-//        return emailsType;
-//    }
 }
