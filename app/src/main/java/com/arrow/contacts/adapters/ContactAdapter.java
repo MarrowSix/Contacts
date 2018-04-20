@@ -12,9 +12,12 @@ import android.widget.SectionIndexer;
 import android.widget.TextView;
 
 import com.arrow.contacts.R;
+import com.arrow.contacts.activities.ContactActivity;
 import com.arrow.contacts.models.Contact;
 
 import java.util.List;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHolder> implements SectionIndexer {
     private List<Contact> mContactList;
@@ -22,7 +25,8 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
     static class ViewHolder extends RecyclerView.ViewHolder {
         TextView firstLetter;
         TextView name;
-        ImageView photo;
+        // ImageView photo;
+        CircleImageView photo;
         View contactView;
 
         public ViewHolder(View view) {
@@ -30,7 +34,8 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
             contactView = view;
             firstLetter = (TextView) view.findViewById(R.id.prefix_letter);
             name = (TextView) view.findViewById(R.id.name_textView);
-            photo = (ImageView) view.findViewById(R.id.image_view);
+            //photo = (ImageView) view.findViewById(R.id.image_view);
+            photo = (CircleImageView) view.findViewById(R.id.image_view);
         }
     }
 
@@ -50,6 +55,10 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
                 int position = holder.getAdapterPosition();
                 Contact person = mContactList.get(position);
                 Intent intent = new Intent("com.arrow.contacts.activities.ACTION_START");
+                intent.putExtra(ContactActivity.CONTACT, person);
+//                intent.putExtra(ContactActivity.CONTACT_NAME, person.getName());
+//                intent.putExtra(ContactActivity.CONTACT_PHOTO_ID, person.getImageID());
+//                intent.putExtra(ContactActivity.CONTACT_NUMBER, person.getPhoneNumber());
                 parent.getContext().startActivity(intent);
             }
         });

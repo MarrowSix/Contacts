@@ -89,6 +89,7 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -217,43 +218,57 @@ public class MainActivity extends AppCompatActivity
 
     // 读取联系人信息
     private void readContacts() {
-        Cursor cursor = null;   // 定义指向查询结果的Cursor对象
-        try {
+        // Cursor cursor = null;   // 定义指向查询结果的Cursor对象
             // 查询联系人信息
-            cursor = getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
-                    null, null, null, ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME );
+        Cursor cursor = getContentResolver().query(ContactsContract.Contacts.CONTENT_URI,
+                null, null, null, null );
 
-            if (cursor != null) {
+        if (cursor != null) {
                 // 若查询结果非空则逐个读取联系人姓名和电话号码
-                while (cursor.moveToNext()) {
-                    String contactName = cursor.
-                            getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
-                    String contactNumber = cursor.
-                            getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-                    // 根据联系人的名字来决定其默认图标
-                    int tempIndex = 0;
-                    for (int i=0; i<contactName.length(); i++) {
-                        tempIndex += contactName.charAt(i);
-                    }
-                    // 将中文姓名转换成对应的拼音字母
-                    String convert = ChineseToPinYinHelper.getInstance().getPinyin(contactName).toUpperCase();
-
-                    // 根据联系人姓名首字母是否满足正则表达式"[A-Z]"来确定其属于哪一组
-                    String subString = convert.substring(0, 1);
-                    if (!subString.matches("[A-Z]")) {
-                        subString = "#";
-                    }
-                    Contact person = new Contact(contactName, contactNumber, convert, subString, R.drawable.ic_contact_deafult);
-                    contactList.add(person);
+            while (cursor.moveToNext()) {
+                Long id = cursor.
+                        getLong(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone._ID));
+                String contactName = cursor.
+                        getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
+//                String contactNumbe = cursor.
+//                        getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+                ArrayList<String> contactNumber = new ArrayList<>();
+//                contactNumber.add(contactNumbe);
+                // 根据联系人的ID获取此人的电话号码
+                String[] phoneProjection = new String[] {
+                        ContactsContract.CommonDataKinds.Phone.NUMBER
+                };
+                Cursor phoneCursor = this.getContentResolver().query(
+                        ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+                        phoneProjection,
+                        ContactsContract.CommonDataKinds.Phone.CONTACT_ID + "=" + id,
+                        null,
+                        null
+                );
+                // 因为同一联系人可能有多个电话号码，需要遍历
+                if (phoneCursor.moveToFirst()) {
+                    do {
+                        contactNumber.add(phoneCursor.getString(phoneCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER)));
+                    } while (phoneCursor.moveToNext());
                 }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            if (cursor != null) {
-                cursor.close();
+                // 根据联系人的名字来决定其默认图标
+                int tempIndex = 0;
+                for (int i=0; i<contactName.length(); i++) {
+                    tempIndex += contactName.charAt(i);
+                }
+                // 将中文姓名转换成对应的拼音字母
+                String convert = ChineseToPinYinHelper.getInstance().getPinyin(contactName).toUpperCase();
+
+                // 根据联系人姓名首字母是否满足正则表达式"[A-Z]"来确定其属于哪一组
+                String subString = convert.substring(0, 1);
+                if (!subString.matches("[A-Z]")) {
+                    subString = "#";
+                }
+                Contact person = new Contact(contactName, contactNumber, convert, subString, R.mipmap.timg, id);
+                contactList.add(person);
             }
         }
+
         Collections.sort(contactList, new Comparator<Contact>() {
             @Override
             public int compare(Contact o1, Contact o2) {
