@@ -23,7 +23,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <include layout="@layout/item_view_phone_number" />
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/contact_detail_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
 
         </android.support.v7.widget.CardView>
 

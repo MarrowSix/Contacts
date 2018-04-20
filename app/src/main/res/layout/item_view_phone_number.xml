@@ -1,24 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="horizontal"
-    android:layout_marginTop="@dimen/small_margin"
-    android:layout_marginBottom="@dimen/small_margin"
-    xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".activities.ContactActivity"
-    tools:showIn="@layout/content_contact">
+    android:layout_height="wrap_content"
+    android:background="@drawable/recycler_item_selector"
+    android:orientation="horizontal" >
 
     <ImageView
-        android:id="@+id/contact_number_call_image"
+        android:id="@+id/contact_detail_main_image"
         android:layout_width="@dimen/contact_icons_size"
         android:layout_height="@dimen/contact_icons_size"
         android:padding="@dimen/medium_margin"
         android:layout_marginStart="@dimen/medium_margin"
         android:layout_marginTop="@dimen/medium_margin"
         android:layout_marginBottom="@dimen/medium_margin"
-        android:layout_gravity="center_vertical"
-        android:src="@drawable/ic_number" />
+        android:layout_gravity="center_vertical" />
 
     <LinearLayout
         android:layout_width="0dp"
@@ -30,7 +25,7 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/contact_number"
+            android:id="@+id/contact_value"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:singleLine="true"
@@ -40,7 +35,7 @@
             android:textSize="16sp" />
 
         <TextView
-            android:id="@+id/contact_number_type"
+            android:id="@+id/contact_value_type"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:singleLine="true"
@@ -52,15 +47,14 @@
 
 
     <ImageView
-        android:id="@+id/contact_number_sms_image"
+        android:id="@+id/contact_detail_back_image"
         android:layout_width="@dimen/contact_icons_size"
         android:layout_height="@dimen/contact_icons_size"
         android:padding="@dimen/medium_margin"
         android:layout_marginEnd="@dimen/medium_margin"
         android:layout_marginTop="@dimen/medium_margin"
         android:layout_marginBottom="@dimen/medium_margin"
-        android:layout_gravity="center_vertical|end"
-        android:src="@drawable/ic_message"/>
+        android:layout_gravity="center_vertical|end" />
 
 
 </LinearLayout>

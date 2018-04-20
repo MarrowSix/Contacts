@@ -1,14 +1,14 @@
 package com.arrow.contacts.activities;
 
 import android.content.Intent;
-import android.graphics.Matrix;
-import android.graphics.drawable.Drawable;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,12 +17,17 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.arrow.contacts.R;
+import com.arrow.contacts.adapters.DetailAdapter;
 import com.arrow.contacts.models.Contact;
-import com.bumptech.glide.Glide;
+import com.arrow.contacts.models.Detail;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ContactActivity extends AppCompatActivity {
 
     public static final String CONTACT = "contact";
+    private List<Detail> mdetailList= new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,17 +54,40 @@ public class ContactActivity extends AppCompatActivity {
         Intent intent = getIntent();
         Contact person = (Contact) intent.getSerializableExtra(CONTACT);
 
+        for (int i=0; i<person.getPhoneNumber().size(); i++) {
+            Detail temp = new Detail(
+                    person.getPhoneNumber().get(i),
+                    person.getPhoneType().get(i),
+                    "0",
+                    R.drawable.ic_number,
+                    R.drawable.ic_message
+            );
+            mdetailList.add(temp);
+        }
+
+        for (int i=0; i<person.getEmails().size(); i++) {
+            Detail temp = new Detail(
+                    person.getEmails().get(i),
+                    person.getEmailsType().get(i),
+                    "@",
+                    R.drawable.ic_email,
+                    R.drawable.ic_message
+            );
+            mdetailList.add(temp);
+        }
+
         CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
         ImageView contactImageView = (ImageView) findViewById(R.id.contact_photo_image_view);
-        TextView contactNumberTextView = (TextView) findViewById(R.id.contact_number);
 
         collapsingToolbarLayout.setTitle(person.getName());
-        // Glide.with(this).load(R.drawable.ic_contact_default).into(contactImageView);
         contactImageView.setImageResource(person.getImageID());
-//        Drawable drawable = getDrawable(contactPhotoID);
-//        Matrix matrix = new Matrix();
 
-        contactNumberTextView.setText(person.getPhoneNumber().get(0));
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.contact_detail_recycler_view);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        DetailAdapter detailAdapter = new DetailAdapter(mdetailList);
+
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setAdapter(detailAdapter);
 
     }
 
