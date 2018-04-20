@@ -93,15 +93,21 @@ public class ContactActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(detailAdapter);
 
-        readCallLog(person.getPhoneNumber(), person.getPhoneType());
+        readCallLog();
+        TextView callLogTitle = (TextView) findViewById(R.id.call_log_title);
+        if (mCallLogsList.size() == 0) {
+            callLogTitle.setVisibility(View.GONE);
+        }
 
         CallLogAdapter callLogAdapter = new CallLogAdapter(mCallLogsList);
-//        callLogRecyclerView = (RecyclerView) findViewById(R.id.contact_call_log_recycler_view);
-//        callLogRecyclerView.setLayoutManager(layoutManager);
-//        callLogRecyclerView.setAdapter(callLogAdapter);
+        callLogRecyclerView = (RecyclerView) findViewById(R.id.contact_call_log_recycler_view);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        callLogRecyclerView.setLayoutManager(linearLayoutManager);
+        callLogRecyclerView.setAdapter(callLogAdapter);
     }
 
     @Override
+
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.view_contact, menu);
         return super.onCreateOptionsMenu(menu);
@@ -152,42 +158,45 @@ public class ContactActivity extends AppCompatActivity {
         }
     }
 
-    private void setDetailInfo() {
 
-    }
-
-    private void readCallLog(List<String> number, List<Integer> numberType) {
-        int count = 0;
-        for (int i=0; i<number.size() && count<3; i++) {
-            String[] callLogProjection = new String[]{
-                    CallLog.Calls.NUMBER,
-                    CallLog.Calls.CACHED_FORMATTED_NUMBER,
-                    CallLog.Calls.TYPE,
-                    CallLog.Calls.DATE,
-                    CallLog.Calls.DURATION
-            };
-            Cursor cursor = this.getContentResolver().query(
-                    CallLog.Calls.CONTENT_URI,
-                    callLogProjection,
-                    CallLog.Calls.CACHED_FORMATTED_NUMBER  + "='" + number.get(i) + "'",
-                    null,
-                    null
-            );
+    private void readCallLog() {
+        String[] callLogProjection = new String[]{
+                CallLog.Calls.NUMBER,
+                CallLog.Calls.CACHED_FORMATTED_NUMBER,
+                CallLog.Calls.TYPE,
+                CallLog.Calls.DATE,
+                CallLog.Calls.DURATION
+        };
+        Cursor cursor = this.getContentResolver().query(
+                CallLog.Calls.CONTENT_URI,
+                callLogProjection,
+                null,
+                null,
+                CallLog.Calls.DEFAULT_SORT_ORDER
+        );
 //
-            if (cursor.moveToFirst()) {
-                do {
-                    CallLogs temp = new CallLogs(
-                            cursor.getString(cursor.getColumnIndex(CallLog.Calls.NUMBER)),
-                            cursor.getInt(cursor.getColumnIndex(CallLog.Calls.TYPE)),
-                            numberType.get(i),
-                            cursor.getLong(cursor.getColumnIndex(CallLog.Calls.DATE)),
-                            cursor.getLong(cursor.getColumnIndex(CallLog.Calls.DURATION))
-                    );
-                    mCallLogsList.add(temp);
-                    count++;
-                } while (cursor.moveToNext() && count<3);
-            }
-            cursor.close();
+        if (cursor.moveToFirst()) {
+            int count = 0;
+            do {
+//                Cursor numberTypeCursor = this.getContentResolver().query(
+//                        ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+//                        new String[] { ContactsContract.CommonDataKinds.Phone.TYPE, ContactsContract.CommonDataKinds.Phone.NUMBER },
+//                        ContactsContract.CommonDataKinds.Phone.NUMBER + "='" + cursor.getString(cursor.getColumnIndex(CallLog.Calls.NUMBER)) + "'",
+//                        null,
+//                        null
+//                );
+//                numberTypeCursor.getInt(numberTypeCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.TYPE))
+                CallLogs temp = new CallLogs(
+                        cursor.getString(cursor.getColumnIndex(CallLog.Calls.NUMBER)),
+                        2,
+                        cursor.getInt(cursor.getColumnIndex(CallLog.Calls.TYPE)),
+                        cursor.getLong(cursor.getColumnIndex(CallLog.Calls.DATE)),
+                        cursor.getLong(cursor.getColumnIndex(CallLog.Calls.DURATION))
+                );
+                mCallLogsList.add(temp);
+                count++;
+            } while (cursor.moveToNext() && count<3);
         }
+        cursor.close();
     }
 }
