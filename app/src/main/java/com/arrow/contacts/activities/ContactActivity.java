@@ -81,6 +81,8 @@ public class ContactActivity extends AppCompatActivity {
             case android.R.id.home:
                 finish();
                 return true;
+            case R.id.ic_action_delete:
+                deleteContact(person);
                 default:
         }
         return super.onOptionsItemSelected(item);
@@ -290,5 +292,9 @@ public class ContactActivity extends AppCompatActivity {
             } while (cursor.moveToNext() && count<3);
         }
         cursor.close();
+    }
+
+    private void deleteContact(Contact person) {
+
     }
 }

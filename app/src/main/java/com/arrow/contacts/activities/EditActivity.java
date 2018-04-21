@@ -11,8 +11,32 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.arrow.contacts.R;
+import com.jaredrummler.materialspinner.MaterialSpinner;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class EditActivity extends AppCompatActivity {
+
+    private  static final String[] nType = {
+            "住宅",
+            "手机",
+            "单位",
+            "单位传真",
+            "住宅传真",
+            "其他"
+    };
+
+    private static final String[] eType = {
+            "住宅",
+            "工作",
+            "其他",
+            "个人"
+    };
+
+    private static List<String> numberType = Arrays.asList(nType);
+    private static List<String> emailType = Arrays.asList(eType);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,6 +49,27 @@ public class EditActivity extends AppCompatActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_cancel);
+
+        MaterialSpinner nTypeSpinner = (MaterialSpinner) findViewById(R.id.person_number_type);
+        nTypeSpinner.setItems(numberType);
+        nTypeSpinner.setSelectedIndex(0);
+        nTypeSpinner.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(MaterialSpinner view, int position, long id, Object item) {
+
+            }
+        });
+
+        MaterialSpinner eTypeSpinner = (MaterialSpinner) findViewById(R.id.person_email_type);
+        eTypeSpinner.setItems(emailType);
+        eTypeSpinner.setSelectedIndex(0);
+        nTypeSpinner.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(MaterialSpinner view, int position, long id, Object item) {
+
+            }
+        });
+
     }
 
     @Override
