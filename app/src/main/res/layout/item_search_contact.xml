@@ -7,15 +7,24 @@
     android:layout_height="wrap_content">
 
 
-    <ImageView
+    <!--<ImageView-->
+        <!--android:id="@+id/image_view"-->
+        <!--android:layout_width="@android:dimen/app_icon_size"-->
+        <!--android:layout_height="@android:dimen/app_icon_size"-->
+        <!--android:layout_gravity="center_vertical"-->
+        <!--android:layout_marginBottom="5dp"-->
+        <!--android:layout_marginStart="5dp"-->
+        <!--android:layout_marginEnd="16dp"-->
+        <!--android:layout_marginTop="5dp" />-->
+
+    <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/image_view"
-        android:layout_width="@android:dimen/app_icon_size"
-        android:layout_height="@android:dimen/app_icon_size"
-        android:layout_gravity="center_vertical"
-        android:layout_marginBottom="5dp"
         android:layout_marginStart="5dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginTop="5dp" />
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:layout_width="@android:dimen/app_icon_size"
+        android:layout_height="@android:dimen/app_icon_size" />
 
     <TextView
         android:id="@+id/name_textView"

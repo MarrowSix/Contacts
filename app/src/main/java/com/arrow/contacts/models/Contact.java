@@ -48,6 +48,14 @@ public class Contact implements Serializable{
         this.firstLetter = firstLetter;
     }
 
+    public Contact(String name, String pinYin, String firstLetter, int imageID, Long id) {
+        this.name = name;
+        this.pinYin = pinYin;
+        this.firstLetter = firstLetter;
+        this.imageID = imageID;
+        this.id = id;
+    }
+
     public void setPinYin(String pinYin) {
         this.pinYin = pinYin;
     }
@@ -86,5 +94,25 @@ public class Contact implements Serializable{
 
     public List<Integer> getEmailsType() {
         return emailsType;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setEmails(List<String> emails) {
+        this.emails = emails;
+    }
+
+    public void setEmailsType(List<Integer> emailsType) {
+        this.emailsType = emailsType;
+    }
+
+    public void setPhoneNumber(List<String> phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public void setPhoneType(List<Integer> phoneType) {
+        this.phoneType = phoneType;
     }
 }

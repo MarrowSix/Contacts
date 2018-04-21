@@ -54,6 +54,8 @@
         android:layout_marginEnd="@dimen/medium_margin"
         android:layout_marginTop="@dimen/medium_margin"
         android:layout_marginBottom="@dimen/medium_margin"
+        android:clickable="true"
+        android:background="?android:attr/selectableItemBackgroundBorderless"
         android:layout_gravity="center_vertical|end" />
 
 

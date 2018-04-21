@@ -52,46 +52,8 @@ public class ContactActivity extends AppCompatActivity {
         setContentView(R.layout.activity_contact);
 
         initFragment();
-
-
-        Intent intent = getIntent();
-        person = (Contact) intent.getSerializableExtra(CONTACT);
-
-        for (int i=0; i<person.getPhoneNumber().size(); i++) {
-            Detail temp = new Detail(
-                    person.getPhoneNumber().get(i),
-                    person.getPhoneType().get(i),
-                    "0",
-                    R.drawable.ic_number,
-                    R.drawable.ic_message
-            );
-            mdetailList.add(temp);
-        }
-
-        for (int i=0; i<person.getEmails().size(); i++) {
-            Detail temp = new Detail(
-                    person.getEmails().get(i),
-                    person.getEmailsType().get(i),
-                    "@",
-                    R.drawable.ic_email,
-                    R.drawable.ic_message
-            );
-            mdetailList.add(temp);
-        }
-
-        CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
-        ImageView contactImageView = (ImageView) findViewById(R.id.contact_photo_image_view);
-
-        collapsingToolbarLayout.setTitle(person.getName());
-        contactImageView.setImageResource(person.getImageID());
-
-        // 显示联系人号码和邮箱地址
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.contact_detail_recycler_view);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        DetailAdapter detailAdapter = new DetailAdapter(mdetailList);
-
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setAdapter(detailAdapter);
+//        setDetailContent();
+        setDetail();
 
         readCallLog();
         TextView callLogTitle = (TextView) findViewById(R.id.call_log_title);
@@ -158,6 +120,136 @@ public class ContactActivity extends AppCompatActivity {
         }
     }
 
+    private void setDetail() {
+        Intent intent = getIntent();
+        person = (Contact) intent.getSerializableExtra(CONTACT);
+
+        List<String> contactNumber = new ArrayList<>();
+        List<Integer> numberType = new ArrayList<>();
+        // 根据联系人的ID获取此人的电话号码
+        String[] phoneProjection = new String[] {
+                ContactsContract.CommonDataKinds.Phone.NUMBER,
+                ContactsContract.CommonDataKinds.Phone.TYPE
+        };
+        Cursor phoneCursor = this.getContentResolver().query(
+                ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+                phoneProjection,
+                ContactsContract.CommonDataKinds.Phone.CONTACT_ID + "=" + person.getId(),
+                null,
+                null
+        );
+        // 因为同一联系人可能有多个电话号码，需要遍历
+        if (phoneCursor.moveToFirst()) {
+            do {
+                contactNumber.add(phoneCursor.getString(phoneCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER)));
+                numberType.add(phoneCursor.getInt(phoneCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.TYPE)));
+            } while (phoneCursor.moveToNext());
+        }
+        phoneCursor.close();
+
+        List<String> emails = new ArrayList<>();
+        List<Integer> emailsType = new ArrayList<>();
+        String[] emailProjection = new String[] {
+                ContactsContract.CommonDataKinds.Email.ADDRESS,
+                ContactsContract.CommonDataKinds.Email.TYPE
+        };
+        Cursor emailCursor = this.getContentResolver().query(
+                ContactsContract.CommonDataKinds.Email.CONTENT_URI,
+                emailProjection,
+                ContactsContract.CommonDataKinds.Email.CONTACT_ID + "=" + person.getId(),
+                null,
+                null
+        );
+        if (emailCursor.moveToFirst()) {
+            do {
+                emails.add(emailCursor.getString(emailCursor.getColumnIndex(ContactsContract.CommonDataKinds.Email.ADDRESS)));
+                emailsType.add(emailCursor.getInt(emailCursor.getColumnIndex(ContactsContract.CommonDataKinds.Email.TYPE)));
+            } while (emailCursor.moveToNext());
+        }
+        emailCursor.close();
+
+        person.setPhoneNumber(contactNumber);
+        person.setPhoneType(numberType);
+        person.setEmails(emails);
+        person.setEmailsType(emailsType);
+
+        for (int i=0; i<person.getPhoneNumber().size(); i++) {
+            Detail temp = new Detail(
+                    person.getPhoneNumber().get(i),
+                    person.getPhoneType().get(i),
+                    "0",
+                    R.drawable.ic_number,
+                    R.drawable.ic_message
+            );
+            mdetailList.add(temp);
+        }
+
+        for (int i=0; i<person.getEmails().size(); i++) {
+            Detail temp = new Detail(
+                    person.getEmails().get(i),
+                    person.getEmailsType().get(i),
+                    "@",
+                    R.drawable.ic_email,
+                    R.drawable.ic_message
+            );
+            mdetailList.add(temp);
+        }
+
+        CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
+        ImageView contactImageView = (ImageView) findViewById(R.id.contact_photo_image_view);
+
+        collapsingToolbarLayout.setTitle(person.getName());
+        contactImageView.setImageResource(person.getImageID());
+
+        // 显示联系人号码和邮箱地址
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.contact_detail_recycler_view);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        DetailAdapter detailAdapter = new DetailAdapter(mdetailList);
+
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setAdapter(detailAdapter);
+    }
+
+    private void setDetailContent() {
+        Intent intent = getIntent();
+        person = (Contact) intent.getSerializableExtra(CONTACT);
+
+        for (int i=0; i<person.getPhoneNumber().size(); i++) {
+            Detail temp = new Detail(
+                    person.getPhoneNumber().get(i),
+                    person.getPhoneType().get(i),
+                    "0",
+                    R.drawable.ic_number,
+                    R.drawable.ic_message
+            );
+            mdetailList.add(temp);
+        }
+
+        for (int i=0; i<person.getEmails().size(); i++) {
+            Detail temp = new Detail(
+                    person.getEmails().get(i),
+                    person.getEmailsType().get(i),
+                    "@",
+                    R.drawable.ic_email,
+                    R.drawable.ic_message
+            );
+            mdetailList.add(temp);
+        }
+
+        CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
+        ImageView contactImageView = (ImageView) findViewById(R.id.contact_photo_image_view);
+
+        collapsingToolbarLayout.setTitle(person.getName());
+        contactImageView.setImageResource(person.getImageID());
+
+        // 显示联系人号码和邮箱地址
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.contact_detail_recycler_view);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        DetailAdapter detailAdapter = new DetailAdapter(mdetailList);
+
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setAdapter(detailAdapter);
+    }
 
     private void readCallLog() {
         String[] callLogProjection = new String[]{

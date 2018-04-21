@@ -1,5 +1,6 @@
 package com.arrow.contacts.adapters;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
@@ -21,6 +22,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHolder> implements SectionIndexer {
     private List<Contact> mContactList;
+    private Context mContext;
 
     static class ViewHolder extends RecyclerView.ViewHolder {
         TextView firstLetter;
@@ -49,6 +51,10 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_view_contact, parent, false);
         final ViewHolder holder = new ViewHolder(view);
 
+        if (mContext == null) {
+            mContext = parent.getContext();
+        }
+
         holder.contactView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -56,7 +62,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
                 Contact person = mContactList.get(position);
                 Intent intent = new Intent("com.arrow.contacts.activities.ACTION_START");
                 intent.putExtra(ContactActivity.CONTACT, person);
-                parent.getContext().startActivity(intent);
+                mContext.startActivity(intent);
             }
         });
 

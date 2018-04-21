@@ -222,50 +222,50 @@ public class MainActivity extends AppCompatActivity
                         getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
 //                String contactNumbe = cursor.
 //                        getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-                List<String> contactNumber = new ArrayList<>();
-                List<Integer> numberType = new ArrayList<>();
-//                contactNumber.add(contactNumbe);
-                // 根据联系人的ID获取此人的电话号码
-                String[] phoneProjection = new String[] {
-                        ContactsContract.CommonDataKinds.Phone.NUMBER,
-                        ContactsContract.CommonDataKinds.Phone.TYPE
-                };
-                Cursor phoneCursor = this.getContentResolver().query(
-                        ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
-                        phoneProjection,
-                        ContactsContract.CommonDataKinds.Phone.CONTACT_ID + "=" + id,
-                        null,
-                        null
-                );
-                // 因为同一联系人可能有多个电话号码，需要遍历
-                if (phoneCursor.moveToFirst()) {
-                    do {
-                        contactNumber.add(phoneCursor.getString(phoneCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER)));
-                        numberType.add(phoneCursor.getInt(phoneCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.TYPE)));
-                    } while (phoneCursor.moveToNext());
-                }
-                phoneCursor.close();
-
-                List<String> emails = new ArrayList<>();
-                List<Integer> emailsType = new ArrayList<>();
-                String[] emailProjection = new String[] {
-                        ContactsContract.CommonDataKinds.Email.ADDRESS,
-                        ContactsContract.CommonDataKinds.Email.TYPE
-                };
-                Cursor emailCursor = this.getContentResolver().query(
-                        ContactsContract.CommonDataKinds.Email.CONTENT_URI,
-                        emailProjection,
-                        ContactsContract.CommonDataKinds.Email.CONTACT_ID + "=" + id,
-                        null,
-                        null
-                );
-                if (emailCursor.moveToFirst()) {
-                    do {
-                        emails.add(emailCursor.getString(emailCursor.getColumnIndex(ContactsContract.CommonDataKinds.Email.ADDRESS)));
-                        emailsType.add(emailCursor.getInt(emailCursor.getColumnIndex(ContactsContract.CommonDataKinds.Email.TYPE)));
-                    } while (emailCursor.moveToNext());
-                }
-                emailCursor.close();
+//                List<String> contactNumber = new ArrayList<>();
+//                List<Integer> numberType = new ArrayList<>();
+////                contactNumber.add(contactNumbe);
+//                // 根据联系人的ID获取此人的电话号码
+//                String[] phoneProjection = new String[] {
+//                        ContactsContract.CommonDataKinds.Phone.NUMBER,
+//                        ContactsContract.CommonDataKinds.Phone.TYPE
+//                };
+//                Cursor phoneCursor = this.getContentResolver().query(
+//                        ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+//                        phoneProjection,
+//                        ContactsContract.CommonDataKinds.Phone.CONTACT_ID + "=" + id,
+//                        null,
+//                        null
+//                );
+//                // 因为同一联系人可能有多个电话号码，需要遍历
+//                if (phoneCursor.moveToFirst()) {
+//                    do {
+//                        contactNumber.add(phoneCursor.getString(phoneCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER)));
+//                        numberType.add(phoneCursor.getInt(phoneCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.TYPE)));
+//                    } while (phoneCursor.moveToNext());
+//                }
+//                phoneCursor.close();
+//
+//                List<String> emails = new ArrayList<>();
+//                List<Integer> emailsType = new ArrayList<>();
+//                String[] emailProjection = new String[] {
+//                        ContactsContract.CommonDataKinds.Email.ADDRESS,
+//                        ContactsContract.CommonDataKinds.Email.TYPE
+//                };
+//                Cursor emailCursor = this.getContentResolver().query(
+//                        ContactsContract.CommonDataKinds.Email.CONTENT_URI,
+//                        emailProjection,
+//                        ContactsContract.CommonDataKinds.Email.CONTACT_ID + "=" + id,
+//                        null,
+//                        null
+//                );
+//                if (emailCursor.moveToFirst()) {
+//                    do {
+//                        emails.add(emailCursor.getString(emailCursor.getColumnIndex(ContactsContract.CommonDataKinds.Email.ADDRESS)));
+//                        emailsType.add(emailCursor.getInt(emailCursor.getColumnIndex(ContactsContract.CommonDataKinds.Email.TYPE)));
+//                    } while (emailCursor.moveToNext());
+//                }
+//                emailCursor.close();
                 // 根据联系人的名字来决定其默认图标
                 int tempIndex = 0;
                 for (int i=0; i<contactName.length(); i++) {
@@ -279,7 +279,7 @@ public class MainActivity extends AppCompatActivity
                 if (!subString.matches("[A-Z]")) {
                     subString = "#";
                 }
-                Contact person = new Contact(contactName, contactNumber, numberType, emails, emailsType, convert, subString, R.mipmap.timg, id);
+                Contact person = new Contact(contactName, convert, subString, R.mipmap.timg, id);
                 contactList.add(person);
             }
             cursor.close();

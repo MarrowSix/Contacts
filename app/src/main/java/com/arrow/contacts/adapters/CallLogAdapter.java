@@ -1,6 +1,7 @@
 package com.arrow.contacts.adapters;
 
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -53,7 +54,8 @@ public class CallLogAdapter extends RecyclerView.Adapter<CallLogAdapter.ViewHold
         holder.callLogView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Snackbar.make(v, "Replace with your own action", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
             }
         });
 
