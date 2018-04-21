@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.NestedScrollView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".activities.EditActivity"
+    tools:showIn="@layout/activity_edit">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:background="@color/colorCamera"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:layout_gravity="center"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="76dp"
+                android:src="@mipmap/timg"
+                android:layout_width="@dimen/camera_icon"
+                android:layout_height="@dimen/camera_icon"
+                app:civ_border_width="@dimen/small_margin"
+                app:civ_border_color="@color/colorCameraBorder"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/medium_margin">
+
+            <ImageView
+                android:layout_width="@dimen/contact_icons_size"
+                android:layout_height="@dimen/contact_icons_size"
+                android:padding="@dimen/medium_margin"
+                android:layout_marginStart="@dimen/medium_margin"
+                android:layout_marginTop="@dimen/medium_margin"
+                android:src="@drawable/ic_person_name"/>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/contact_icons_size"
+                android:layout_marginStart="@dimen/large_margin"
+                android:layout_weight="1">
+
+                <com.rengwuxian.materialedittext.MaterialEditText
+                    android:id="@+id/person_last_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/medium_margin"
+                    android:hint="@string/person_last_name"
+                    android:inputType="text"
+                    android:singleLine="true"
+                    android:textIsSelectable="false"
+                    android:textSize="16sp"
+                    app:met_primaryColor="@color/colorMobile" />
+
+                <com.rengwuxian.materialedittext.MaterialEditText
+                    android:id="@+id/person_first_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/medium_margin"
+                    android:hint="@string/person_first_name"
+                    android:inputType="text"
+                    android:singleLine="true"
+                    android:textIsSelectable="false"
+                    android:textSize="16sp"
+                    app:met_primaryColor="@color/colorMobile" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/medium_margin">
+
+            <ImageView
+                android:layout_width="@dimen/contact_icons_size"
+                android:layout_height="@dimen/contact_icons_size"
+                android:padding="@dimen/medium_margin"
+                android:layout_marginStart="@dimen/medium_margin"
+                android:layout_marginTop="@dimen/medium_margin"
+                android:src="@drawable/ic_person_domain"/>
+
+            <com.rengwuxian.materialedittext.MaterialEditText
+                android:id="@+id/person_company_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/contact_icons_size"
+                android:layout_marginStart="@dimen/large_margin"
+                android:layout_marginTop="@dimen/medium_margin"
+                android:hint="@string/person_company_name"
+                android:inputType="text"
+                android:singleLine="true"
+                android:textIsSelectable="false"
+                android:textSize="16sp"
+                app:met_primaryColor="@color/colorMobile" />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/medium_margin">
+
+            <ImageView
+                android:layout_width="@dimen/contact_icons_size"
+                android:layout_height="@dimen/contact_icons_size"
+                android:padding="@dimen/medium_margin"
+                android:layout_marginStart="@dimen/medium_margin"
+                android:layout_marginTop="@dimen/medium_margin"
+                android:src="@drawable/ic_number"/>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/contact_icons_size"
+                android:layout_marginStart="@dimen/large_margin"
+                android:layout_weight="1">
+
+                <com.rengwuxian.materialedittext.MaterialEditText
+                    android:id="@+id/person_number"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/medium_margin"
+                    android:hint="@string/person_number"
+                    android:inputType="text"
+                    android:singleLine="true"
+                    android:textIsSelectable="false"
+                    android:textSize="16sp"
+                    app:met_primaryColor="@color/colorMobile" />
+
+                <com.jaredrummler.materialspinner.MaterialSpinner
+                    android:id="@+id/person_number_type"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="16sp"
+                    android:layout_marginTop="@dimen/medium_margin"
+                    android:layout_marginEnd="@dimen/contact_photo_size"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/medium_margin">
+
+            <ImageView
+                android:layout_width="@dimen/contact_icons_size"
+                android:layout_height="@dimen/contact_icons_size"
+                android:padding="@dimen/medium_margin"
+                android:layout_marginStart="@dimen/medium_margin"
+                android:layout_marginTop="@dimen/medium_margin"
+                android:src="@drawable/ic_email"/>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/contact_icons_size"
+                android:layout_marginStart="@dimen/large_margin"
+                android:layout_weight="1">
+
+                <com.rengwuxian.materialedittext.MaterialEditText
+                    android:id="@+id/person_email"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/medium_margin"
+                    android:hint="@string/person_email"
+                    android:inputType="text"
+                    android:singleLine="true"
+                    android:textIsSelectable="false"
+                    android:textSize="16sp"
+                    app:met_primaryColor="@color/colorMobile" />
+
+                <com.jaredrummler.materialspinner.MaterialSpinner
+                    android:id="@+id/person_email_type"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="16sp"
+                    android:layout_marginTop="@dimen/medium_margin"
+                    android:layout_marginEnd="@dimen/contact_photo_size"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</android.support.v4.widget.NestedScrollView>

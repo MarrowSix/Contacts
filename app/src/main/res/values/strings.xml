@@ -9,4 +9,10 @@
     <string name="default_prefix">Z</string>
     <string name="title_activity_contact">ContactActivity</string>
     <string name="title_none"></string>
+    <string name="title_activity_edit">创建联系人</string>
+    <string name="person_last_name">姓氏</string>
+    <string name="person_first_name">名字</string>
+    <string name="person_company_name">公司</string>
+    <string name="person_number">电话</string>
+    <string name="person_email">电子邮件</string>
 </resources>

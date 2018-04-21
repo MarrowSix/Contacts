@@ -23,4 +23,14 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <style name="AppTheme.Edit.Toolbar" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="elevation">0dp</item>
+    </style>
+
+    <style name="AppTheme.Edit" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:colorPrimary">@color/colorCamera</item>
+        <item name="android:colorPrimaryDark">@color/colorMobile</item>
+        <item name="android:colorAccent">@color/colorBackground</item>
+    </style>
+
 </resources>
