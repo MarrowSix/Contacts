@@ -14,14 +14,9 @@ public class Contact implements Serializable{
     private List<Integer> phoneType;
     private List<String> emails;
     private List<Integer> emailsType;
-    private List<Address> addresses;
-    private List<Event> events;
-    private String notes;
-    private ArrayList<Group> groups;
-    private Organization organization;
 
     public Contact(Long id, String prefix, String firstName, String middleName, String surName,
-                   String photoUri, List<String> phoneNumber, String notes) {
+                   String photoUri, List<String> phoneNumber) {
         this.id = id;
         this.prefix = prefix;
         this.firstName = firstName;
@@ -29,7 +24,6 @@ public class Contact implements Serializable{
         this.surName = surName;
         this.photoUri = photoUri;
         this.phoneNumber = phoneNumber;
-        this.notes = notes;
     }
 
     public Contact(String name,
