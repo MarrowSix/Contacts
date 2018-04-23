@@ -257,21 +257,6 @@ public class MainActivity extends AppCompatActivity
                 String contactName = cursor.
                         getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
 
-                Cursor nameCursor = getContentResolver().query(
-                        ContactsContract.Data.CONTENT_URI,
-                        new String[] {ContactsContract.CommonDataKinds.StructuredName.FAMILY_NAME
-                                , ContactsContract.CommonDataKinds.StructuredName.GIVEN_NAME},
-                        ContactsContract.CommonDataKinds.Phone.CONTACT_ID + "=" +  id,
-                        null,
-                        null
-                );
-                String lastName = new String("");
-                String firstName = new String("");
-                if (nameCursor != null && nameCursor.moveToFirst()) {
-                    lastName = nameCursor.getString(0);
-                    firstName = nameCursor.getString(1);
-                }
-
                 Cursor rawContactCursor = getContentResolver().query(
                         ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
                         new String[] { ContactsContract.RawContacts._ID },
@@ -295,7 +280,7 @@ public class MainActivity extends AppCompatActivity
                 if (!subString.matches("[A-Z]")) {
                     subString = "#";
                 }
-                Contact person = new Contact(lastName, firstName, contactName, convert, subString, R.mipmap.timg, id, rawContactId);
+                Contact person = new Contact(contactName, convert, subString, R.mipmap.timg, id, rawContactId);
                 contactList.add(person);
             }
             cursor.close();

@@ -107,8 +107,7 @@ public class ContactActivity extends AppCompatActivity {
                 Intent intent = new Intent("com.arrow.contacts.activities.EDIT_START");
                 intent.putExtra("show_type", false);
                 Temp temp = new Temp(
-                        !person.getSurName().isEmpty() ? person.getSurName() : new String(""),
-                        !person.getFirstName().isEmpty() ? person.getFirstName() : new String(""),
+                        person.getName(),
                         "",
                         !person.getPhoneNumber().isEmpty() ? person.getPhoneNumber().get(0) : new String(""),
                         !person.getPhoneType().isEmpty() ? person.getPhoneType().get(0) : 1,

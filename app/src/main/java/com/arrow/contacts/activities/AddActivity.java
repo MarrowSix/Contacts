@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.arrow.contacts.R;
 import com.arrow.contacts.models.Temp;
@@ -76,11 +77,13 @@ public class AddActivity extends AppCompatActivity {
             nTypeSpinner.setSelectedIndex(0);
             eTypeSpinner.setSelectedIndex(0);
         } else {
+            getSupportActionBar().setTitle("修改联系人");
             temp = (Temp) getIntent().getSerializableExtra(EDIT);
             nTypeSpinner.setSelectedIndex(temp.getNumType());
             eTypeSpinner.setSelectedIndex(temp.getEmaType());
-            lastName.setText(temp.getLastName());
-            firstName.setText(temp.getFirstName());
+            lastName.setText(temp.getName());
+            lastName.setHint("姓名");
+            firstName.setVisibility(View.GONE);
             number.setText(temp.getpNumber());
             email.setText(temp.getpEmail());
         }
@@ -111,14 +114,9 @@ public class AddActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void init() {
-
-    }
-
     private void getUIData() {
         temp = new Temp(
-                lastName.getText().toString(),
-                firstName.getText().toString(),
+                lastName.getText().toString()+firstName.getText().toString(),
                 domain.getText().toString(),
                 number.getText().toString(),
                 nTypeSpinner.getSelectedIndex(),

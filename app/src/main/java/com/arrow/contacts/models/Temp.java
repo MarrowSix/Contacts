@@ -38,9 +38,8 @@ public class Temp implements Serializable {
     private String pEmail;
     private int emaType;
 
-    public Temp(String firstName, String lastName,String cDomain, String pNumber, int numType, String pEmail, int emaType) {
-        this.firstName = firstName;
-        this.lastName = lastName;
+    public Temp(String name, String cDomain, String pNumber, int numType, String pEmail, int emaType) {
+        this.name = name;
         this.cDomain = cDomain;
         this.pEmail = pEmail;
         this.pNumber = pNumber;
@@ -64,7 +63,7 @@ public class Temp implements Serializable {
     }
 
     public String getName() {
-        return lastName + firstName;
+        return name;
     }
 
     public String getFirstName() {

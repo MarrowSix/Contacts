@@ -43,9 +43,7 @@ public class Contact implements Serializable{
         this.firstLetter = firstLetter;
     }
 
-    public Contact(String surName, String firstName, String name, String pinYin, String firstLetter, int imageID, Long id, Long rawContactId) {
-        this.surName = surName;
-        this.firstName = firstName;
+    public Contact(String name, String pinYin, String firstLetter, int imageID, Long id, Long rawContactId) {
         this.name = name;
         this.pinYin = pinYin;
         this.firstLetter = firstLetter;
