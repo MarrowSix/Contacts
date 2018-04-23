@@ -6,6 +6,7 @@ import java.util.List;
 
 public class Contact implements Serializable{
     private Long id;
+    private Long rawContactId;
     private int imageID;
     private String firstLetter, pinYin, name;
     private String prefix, firstName, middleName, surName, suffix;
@@ -14,14 +15,9 @@ public class Contact implements Serializable{
     private List<Integer> phoneType;
     private List<String> emails;
     private List<Integer> emailsType;
-    private List<Address> addresses;
-    private List<Event> events;
-    private String notes;
-    private ArrayList<Group> groups;
-    private Organization organization;
 
     public Contact(Long id, String prefix, String firstName, String middleName, String surName,
-                   String photoUri, List<String> phoneNumber, String notes) {
+                   String photoUri, List<String> phoneNumber) {
         this.id = id;
         this.prefix = prefix;
         this.firstName = firstName;
@@ -29,7 +25,6 @@ public class Contact implements Serializable{
         this.surName = surName;
         this.photoUri = photoUri;
         this.phoneNumber = phoneNumber;
-        this.notes = notes;
     }
 
     public Contact(String name,
@@ -48,12 +43,17 @@ public class Contact implements Serializable{
         this.firstLetter = firstLetter;
     }
 
-    public Contact(String name, String pinYin, String firstLetter, int imageID, Long id) {
+    public Contact(String name, String pinYin, String firstLetter, int imageID, Long id, Long rawContactId) {
         this.name = name;
         this.pinYin = pinYin;
         this.firstLetter = firstLetter;
         this.imageID = imageID;
         this.id = id;
+        this.rawContactId = rawContactId;
+    }
+
+    public Long getRawContactId() {
+        return rawContactId;
     }
 
     public void setPinYin(String pinYin) {

@@ -210,21 +210,37 @@ public class MainActivity extends AppCompatActivity
     private void readContacts() {
         // Cursor cursor = null;   // 定义指向查询结果的Cursor对象
             // 查询联系人信息
-        Cursor cursor = getContentResolver().query(ContactsContract.Contacts.CONTENT_URI,
-                null, null, null, null );
+        Cursor cursor = getContentResolver().query(
+                ContactsContract.Contacts.CONTENT_URI,
+                new String[] { ContactsContract.Contacts._ID, ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME},
+                null,
+                null,
+                null
+        );
 
         if (cursor != null) {
                 // 若查询结果非空则逐个读取联系人姓名和电话号码
             while (cursor.moveToNext()) {
                 Long id = cursor.
-                        getLong(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone._ID));
+                        getLong(cursor.getColumnIndex(ContactsContract.Contacts._ID));
                 String contactName = cursor.
                         getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
 
-                int tempIndex = 0;
-                for (int i=0; i<contactName.length(); i++) {
-                    tempIndex += contactName.charAt(i);
+                Cursor rawContactCursor = getContentResolver().query(
+                        ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+                        new String[] { ContactsContract.RawContacts._ID },
+                        ContactsContract.RawContacts.CONTACT_ID + "=" + id,
+                        null,
+                        null
+                );
+
+                Long rawContactId;
+                if (rawContactCursor.moveToFirst()) {
+                    rawContactId = rawContactCursor.getLong(rawContactCursor.getColumnIndex(ContactsContract.RawContacts._ID));
+                } else {
+                    rawContactId = new Long(1);
                 }
+
                 // 将中文姓名转换成对应的拼音字母
                 String convert = ChineseToPinYinHelper.getInstance().getPinyin(contactName).toUpperCase();
 
@@ -233,7 +249,7 @@ public class MainActivity extends AppCompatActivity
                 if (!subString.matches("[A-Z]")) {
                     subString = "#";
                 }
-                Contact person = new Contact(contactName, convert, subString, R.mipmap.timg, id);
+                Contact person = new Contact(contactName, convert, subString, R.mipmap.timg, id, rawContactId);
                 contactList.add(person);
             }
             cursor.close();
