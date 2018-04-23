@@ -37,6 +37,7 @@ import com.arrow.contacts.adapters.DetailAdapter;
 import com.arrow.contacts.models.CallLogs;
 import com.arrow.contacts.models.Contact;
 import com.arrow.contacts.models.Detail;
+import com.arrow.contacts.models.Temp;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -101,8 +102,21 @@ public class ContactActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
+                Intent intent = new Intent("com.arrow.contacts.activities.EDIT_START");
+                intent.putExtra("show_type", false);
+                Temp temp = new Temp(
+                        !person.getSurName().isEmpty() ? person.getSurName() : new String(""),
+                        !person.getFirstName().isEmpty() ? person.getFirstName() : new String(""),
+                        "",
+                        !person.getPhoneNumber().isEmpty() ? person.getPhoneNumber().get(0) : new String(""),
+                        !person.getPhoneType().isEmpty() ? person.getPhoneType().get(0) : 1,
+                        !person.getEmails().isEmpty() ? person.getEmails().get(0) : new String(""),
+                        !person.getEmailsType().isEmpty() ? person.getEmailsType().get(0) : 1
+                );
+                intent.putExtra(AddActivity.EDIT, temp);
+                startActivity(intent);
             }
         });
 
@@ -218,17 +232,9 @@ public class ContactActivity extends AppCompatActivity {
                 CallLog.Calls.DEFAULT_SORT_ORDER
         );
 //
-        if (cursor.moveToFirst()) {
+        if (cursor != null && cursor.moveToFirst()) {
             int count = 0;
             do {
-//                Cursor numberTypeCursor = this.getContentResolver().query(
-//                        ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
-//                        new String[] { ContactsContract.CommonDataKinds.Phone.TYPE, ContactsContract.CommonDataKinds.Phone.NUMBER },
-//                        ContactsContract.CommonDataKinds.Phone.NUMBER + "='" + cursor.getString(cursor.getColumnIndex(CallLog.Calls.NUMBER)) + "'",
-//                        null,
-//                        null
-//                );
-//                numberTypeCursor.getInt(numberTypeCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.TYPE))
                 CallLogs temp = new CallLogs(
                         cursor.getString(cursor.getColumnIndex(CallLog.Calls.NUMBER)),
                         2,

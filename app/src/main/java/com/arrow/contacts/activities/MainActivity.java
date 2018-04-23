@@ -12,6 +12,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -45,6 +46,8 @@ public class MainActivity extends AppCompatActivity
     private RecyclerView recyclerView;
     private ContactAdapter contactAdapter;
     private FloatingActionButton fab;
+
+    private SwipeRefreshLayout swipeRefresh;
 
     private List<Contact> contactList = new ArrayList<>();
     // 默认头像
@@ -160,19 +163,46 @@ public class MainActivity extends AppCompatActivity
             public void onClick(View view) {
 //                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
 //                        .setAction("Action", null).show();
-                Intent intent = new Intent("com.arrow.contacts.activities.EDIT_START");
+                Intent intent = new Intent("com.arrow.contacts.activities.ADD_START");
+                intent.putExtra("show_type", true);
                 startActivity(intent);
             }
         });
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
-        toggle.syncState();
+        swipeRefresh = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh);
+        swipeRefresh.setColorSchemeColors(getColor(R.color.colorPrimary));
+        swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            Thread.sleep(1250);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                readContacts();
+                                contactAdapter.notifyDataSetChanged();
+                                swipeRefresh.setRefreshing(false);
+                            }
+                        });
+                    }
+                }).start();
+            }
+        });
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+//        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+//        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+//                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+//        drawer.addDrawerListener(toggle);
+//        toggle.syncState();
+//
+//        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+//        navigationView.setNavigationItemSelectedListener(this);
 
         searchView = (MaterialSearchView) findViewById(R.id.search_view);
         searchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
@@ -208,23 +238,39 @@ public class MainActivity extends AppCompatActivity
 
     // 读取联系人信息
     private void readContacts() {
+        contactList.clear();
         // Cursor cursor = null;   // 定义指向查询结果的Cursor对象
             // 查询联系人信息
         Cursor cursor = getContentResolver().query(
                 ContactsContract.Contacts.CONTENT_URI,
-                new String[] { ContactsContract.Contacts._ID, ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME},
+                new String[] { ContactsContract.Contacts._ID, ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME },
                 null,
                 null,
                 null
         );
 
         if (cursor != null) {
-                // 若查询结果非空则逐个读取联系人姓名和电话号码
+                // 若查询结果非空则逐个读取联系人姓名
             while (cursor.moveToNext()) {
                 Long id = cursor.
                         getLong(cursor.getColumnIndex(ContactsContract.Contacts._ID));
                 String contactName = cursor.
                         getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
+
+                Cursor nameCursor = getContentResolver().query(
+                        ContactsContract.Data.CONTENT_URI,
+                        new String[] {ContactsContract.CommonDataKinds.StructuredName.FAMILY_NAME
+                                , ContactsContract.CommonDataKinds.StructuredName.GIVEN_NAME},
+                        ContactsContract.CommonDataKinds.Phone.CONTACT_ID + "=" +  id,
+                        null,
+                        null
+                );
+                String lastName = new String("");
+                String firstName = new String("");
+                if (nameCursor != null && nameCursor.moveToFirst()) {
+                    lastName = nameCursor.getString(0);
+                    firstName = nameCursor.getString(1);
+                }
 
                 Cursor rawContactCursor = getContentResolver().query(
                         ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
@@ -249,7 +295,7 @@ public class MainActivity extends AppCompatActivity
                 if (!subString.matches("[A-Z]")) {
                     subString = "#";
                 }
-                Contact person = new Contact(contactName, convert, subString, R.mipmap.timg, id, rawContactId);
+                Contact person = new Contact(lastName, firstName, contactName, convert, subString, R.mipmap.timg, id, rawContactId);
                 contactList.add(person);
             }
             cursor.close();

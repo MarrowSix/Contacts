@@ -4,25 +4,23 @@ import android.content.ContentProviderOperation;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.provider.ContactsContract;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
 import com.arrow.contacts.R;
+import com.arrow.contacts.models.Temp;
 import com.jaredrummler.materialspinner.MaterialSpinner;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-public class EditActivity extends AppCompatActivity {
+public class AddActivity extends AppCompatActivity {
+
+    public static final String EDIT = "edit";
 
     private  static final String[] nType = {
             "住宅",
@@ -32,17 +30,12 @@ public class EditActivity extends AppCompatActivity {
             "住宅传真",
             "其他"
     };
-
     private static final String[] eType = {
             "住宅",
             "工作",
             "其他",
             "个人"
     };
-
-    private Map<String, String> numberTypeMap = new HashMap<>();
-    private Map<String, String> emailTypeMap = new HashMap<>();
-
     private static List<String> numberType = Arrays.asList(nType);
     private static List<String> emailType = Arrays.asList(eType);
     private MaterialEditText lastName;
@@ -53,12 +46,7 @@ public class EditActivity extends AppCompatActivity {
     private MaterialSpinner nTypeSpinner;
     private MaterialSpinner eTypeSpinner;
 
-    private String name;
-    private String cDomain;
-    private String pNumber;
-    private String numType;
-    private String pEmail;
-    private String emaType;
+    private Temp temp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,18 +60,6 @@ public class EditActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_cancel);
 
-        numberTypeMap.put("住宅", "1");
-        numberTypeMap.put("手机", "2");
-        numberTypeMap.put("单位", "3");
-        numberTypeMap.put("单位传真", "4");
-        numberTypeMap.put("住宅传真", "5");
-        numberTypeMap.put("其他", "7");
-
-        emailTypeMap.put("住宅", "1");
-        emailTypeMap.put("工作", "2");
-        emailTypeMap.put("其他", "3");
-        emailTypeMap.put("个人", "4");
-
         lastName = (MaterialEditText) findViewById(R.id.person_last_name);
         firstName = (MaterialEditText) findViewById(R.id.person_first_name);
         domain = (MaterialEditText) findViewById(R.id.person_company_name);
@@ -92,11 +68,24 @@ public class EditActivity extends AppCompatActivity {
 
         nTypeSpinner = (MaterialSpinner) findViewById(R.id.person_number_type);
         nTypeSpinner.setItems(numberType);
-        nTypeSpinner.setSelectedIndex(0);
-
         eTypeSpinner = (MaterialSpinner) findViewById(R.id.person_email_type);
         eTypeSpinner.setItems(emailType);
-        eTypeSpinner.setSelectedIndex(0);
+
+        boolean showType = getIntent().getBooleanExtra("show_type", true);
+        if (showType == true) {
+            nTypeSpinner.setSelectedIndex(0);
+            eTypeSpinner.setSelectedIndex(0);
+        } else {
+            temp = (Temp) getIntent().getSerializableExtra(EDIT);
+            nTypeSpinner.setSelectedIndex(temp.getNumType());
+            eTypeSpinner.setSelectedIndex(temp.getEmaType());
+            lastName.setText(temp.getLastName());
+            firstName.setText(temp.getFirstName());
+            number.setText(temp.getpNumber());
+            email.setText(temp.getpEmail());
+        }
+
+
     }
 
     @Override
@@ -122,14 +111,20 @@ public class EditActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void getUIData() {
-        name = lastName.getText().toString() + firstName.getText().toString();
-        cDomain = domain.getText().toString();
-        pNumber = number.getText().toString();
-        pEmail = email.getText().toString();
+    private void init() {
 
-        numType = numberTypeMap.get(nType[nTypeSpinner.getSelectedIndex()]);
-        emaType = emailTypeMap.get(eType[eTypeSpinner.getSelectedIndex()]);
+    }
+
+    private void getUIData() {
+        temp = new Temp(
+                lastName.getText().toString(),
+                firstName.getText().toString(),
+                domain.getText().toString(),
+                number.getText().toString(),
+                nTypeSpinner.getSelectedIndex(),
+                email.getText().toString(),
+                eTypeSpinner.getSelectedIndex()
+        );
     }
 
     private void saveContact() {
@@ -143,21 +138,21 @@ public class EditActivity extends AppCompatActivity {
                 ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)
                 .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, 0)
                 .withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE)
-                .withValue(ContactsContract.CommonDataKinds.StructuredName.DISPLAY_NAME, name)  // 插入姓名
+                .withValue(ContactsContract.CommonDataKinds.StructuredName.DISPLAY_NAME, temp.getName())  // 插入姓名
                 .build()
         );
         ops.add(ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)
                 .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, 0)
                 .withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE)
-                .withValue(ContactsContract.CommonDataKinds.Phone.NUMBER, pNumber)  //插入号码
-                .withValue(ContactsContract.CommonDataKinds.Phone.TYPE, numType)    //插入号码类型
+                .withValue(ContactsContract.CommonDataKinds.Phone.NUMBER, temp.getpNumber())  //插入号码
+                .withValue(ContactsContract.CommonDataKinds.Phone.TYPE, temp.getSNumType())    //插入号码类型
                 .build()
         );
         ops.add(ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)
                 .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, 0)
                 .withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.Email.CONTENT_ITEM_TYPE)
-                .withValue(ContactsContract.CommonDataKinds.Email.ADDRESS, pEmail)  //插入电子邮件
-                .withValue(ContactsContract.CommonDataKinds.Email.TYPE, emaType)    //插入电子邮件类型
+                .withValue(ContactsContract.CommonDataKinds.Email.ADDRESS, temp.getpEmail())  //插入电子邮件
+                .withValue(ContactsContract.CommonDataKinds.Email.TYPE, temp.getSEmaType())    //插入电子邮件类型
                 .build()
         );
 

@@ -43,7 +43,9 @@ public class Contact implements Serializable{
         this.firstLetter = firstLetter;
     }
 
-    public Contact(String name, String pinYin, String firstLetter, int imageID, Long id, Long rawContactId) {
+    public Contact(String surName, String firstName, String name, String pinYin, String firstLetter, int imageID, Long id, Long rawContactId) {
+        this.surName = surName;
+        this.firstName = firstName;
         this.name = name;
         this.pinYin = pinYin;
         this.firstLetter = firstLetter;
@@ -58,6 +60,14 @@ public class Contact implements Serializable{
 
     public void setPinYin(String pinYin) {
         this.pinYin = pinYin;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getSurName() {
+        return surName;
     }
 
     public String getPinYin() {
