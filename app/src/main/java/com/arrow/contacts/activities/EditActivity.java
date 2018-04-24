@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.arrow.contacts.R;
+import com.arrow.contacts.models.Contact;
 import com.arrow.contacts.models.Temp;
 import com.jaredrummler.materialspinner.MaterialSpinner;
 import com.rengwuxian.materialedittext.MaterialEditText;
@@ -19,7 +20,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class AddActivity extends AppCompatActivity {
+public class EditActivity extends AppCompatActivity {
 
     public static final String EDIT = "edit";
 
@@ -46,7 +47,8 @@ public class AddActivity extends AppCompatActivity {
     private MaterialEditText email;
     private MaterialSpinner nTypeSpinner;
     private MaterialSpinner eTypeSpinner;
-
+    private boolean showType;
+    private int id;
     private Temp temp;
 
     @Override
@@ -72,7 +74,8 @@ public class AddActivity extends AppCompatActivity {
         eTypeSpinner = (MaterialSpinner) findViewById(R.id.person_email_type);
         eTypeSpinner.setItems(emailType);
 
-        boolean showType = getIntent().getBooleanExtra("show_type", true);
+        showType = getIntent().getBooleanExtra("show_type", true);
+        id = getIntent().getIntExtra("id", 0);
         if (showType == true) {
             nTypeSpinner.setSelectedIndex(0);
             eTypeSpinner.setSelectedIndex(0);
@@ -87,7 +90,6 @@ public class AddActivity extends AppCompatActivity {
             number.setText(temp.getpNumber());
             email.setText(temp.getpEmail());
         }
-
 
     }
 
@@ -105,7 +107,13 @@ public class AddActivity extends AppCompatActivity {
                 return true;
             case R.id.ic_action_save:
                 getUIData();
-                saveContact();
+                if (showType) {
+                    saveContact();
+                } else {
+                    deleteContact();
+                    saveContact();
+                }
+
                 finish();
                 return true;
                 default:
@@ -127,31 +135,53 @@ public class AddActivity extends AppCompatActivity {
 
     private void saveContact() {
         ArrayList<ContentProviderOperation> ops = new ArrayList<ContentProviderOperation>();
+            ops.add(
+                    ContentProviderOperation.newInsert(ContactsContract.RawContacts.CONTENT_URI)
+                            .withValue(ContactsContract.RawContacts.ACCOUNT_NAME, null)  // 这里先传入空值，用于添加一个raw_contact空项
+                            .build()
+            );
+            ops.add(
+                    ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)
+                            .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, 0) // RAW_CONTACT_ID是第一个事务添加得到的，因此这里传入0，applyBatch返回的ContentProviderResult[]数组中第一项
+                            .withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE)
+                            .withValue(ContactsContract.CommonDataKinds.StructuredName.DISPLAY_NAME, temp.getName())  // 插入姓名
+                            .build()
+            );
+            ops.add(ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)
+                    .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, 0)
+                    .withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE)
+                    .withValue(ContactsContract.CommonDataKinds.Phone.NUMBER, temp.getpNumber())  //插入号码
+                    .withValue(ContactsContract.CommonDataKinds.Phone.TYPE, temp.getSNumType())    //插入号码类型
+                    .build()
+            );
+            ops.add(ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)
+                    .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, 0)
+                    .withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.Email.CONTENT_ITEM_TYPE)
+                    .withValue(ContactsContract.CommonDataKinds.Email.ADDRESS, temp.getpEmail())  //插入电子邮件
+                    .withValue(ContactsContract.CommonDataKinds.Email.TYPE, temp.getSEmaType())    //插入电子邮件类型
+                    .build()
+            );
+
+        try {
+            getContentResolver().applyBatch(ContactsContract.AUTHORITY, ops);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void deleteContact() {
+        // 创建内容提供器操作列表
+        ArrayList<ContentProviderOperation> ops = new ArrayList<ContentProviderOperation>();
+        // 添加内容提供器操作，删除联系人在raw_contact和data表中的数据（才能彻底删除）
         ops.add(
-                ContentProviderOperation.newInsert(ContactsContract.RawContacts.CONTENT_URI)
-                .withValue(ContactsContract.RawContacts.ACCOUNT_NAME, null)  // 这里先传入空值，用于添加一个raw_contact空项
-                .build()
+                ContentProviderOperation.newDelete(ContactsContract.RawContacts.CONTENT_URI)
+                        .withSelection(ContactsContract.RawContacts.CONTACT_ID + "=" + id, null)
+                        .build()
         );
         ops.add(
-                ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)
-                .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, 0)
-                .withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE)
-                .withValue(ContactsContract.CommonDataKinds.StructuredName.DISPLAY_NAME, temp.getName())  // 插入姓名
-                .build()
-        );
-        ops.add(ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)
-                .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, 0)
-                .withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE)
-                .withValue(ContactsContract.CommonDataKinds.Phone.NUMBER, temp.getpNumber())  //插入号码
-                .withValue(ContactsContract.CommonDataKinds.Phone.TYPE, temp.getSNumType())    //插入号码类型
-                .build()
-        );
-        ops.add(ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)
-                .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, 0)
-                .withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.Email.CONTENT_ITEM_TYPE)
-                .withValue(ContactsContract.CommonDataKinds.Email.ADDRESS, temp.getpEmail())  //插入电子邮件
-                .withValue(ContactsContract.CommonDataKinds.Email.TYPE, temp.getSEmaType())    //插入电子邮件类型
-                .build()
+                ContentProviderOperation.newDelete(ContactsContract.Data.CONTENT_URI)
+                        .withSelection(ContactsContract.Data.RAW_CONTACT_ID + "=" + id, null)
+                        .build()
         );
 
         try {

@@ -1,38 +1,26 @@
 package com.arrow.contacts.activities;
 
-import android.Manifest;
 import android.content.ContentProviderOperation;
-import android.content.ContentResolver;
-import android.content.ContentUris;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.provider.CallLog;
 import android.provider.ContactsContract;
-import android.support.annotation.NonNull;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.telecom.Call;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.support.v7.widget.Toolbar;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.arrow.contacts.R;
 import com.arrow.contacts.adapters.CallLogAdapter;
-import com.arrow.contacts.adapters.ContactAdapter;
 import com.arrow.contacts.adapters.DetailAdapter;
 import com.arrow.contacts.models.CallLogs;
 import com.arrow.contacts.models.Contact;
@@ -40,7 +28,6 @@ import com.arrow.contacts.models.Detail;
 import com.arrow.contacts.models.Temp;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class ContactActivity extends AppCompatActivity {
@@ -74,7 +61,6 @@ public class ContactActivity extends AppCompatActivity {
     }
 
     @Override
-
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.view_contact, menu);
         return super.onCreateOptionsMenu(menu);
@@ -106,6 +92,7 @@ public class ContactActivity extends AppCompatActivity {
 //                        .setAction("Action", null).show();
                 Intent intent = new Intent("com.arrow.contacts.activities.EDIT_START");
                 intent.putExtra("show_type", false);
+                intent.putExtra("id", person.getId());
                 Temp temp = new Temp(
                         person.getName(),
                         "",
@@ -114,7 +101,7 @@ public class ContactActivity extends AppCompatActivity {
                         !person.getEmails().isEmpty() ? person.getEmails().get(0) : new String(""),
                         !person.getEmailsType().isEmpty() ? person.getEmailsType().get(0) : 1
                 );
-                intent.putExtra(AddActivity.EDIT, temp);
+                intent.putExtra(EditActivity.EDIT, temp);
                 startActivity(intent);
             }
         });
