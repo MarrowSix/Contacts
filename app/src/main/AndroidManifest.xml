@@ -39,6 +39,7 @@
             android:label="@string/title_activity_edit"
             android:theme="@style/AppTheme.Edit">
             <intent-filter>
+                <action android:name="com.arrow.contacts.activities.ADD_START"/>
                 <action android:name="com.arrow.contacts.activities.EDIT_START"/>
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>

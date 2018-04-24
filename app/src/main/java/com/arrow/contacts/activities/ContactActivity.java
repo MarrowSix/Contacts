@@ -1,39 +1,31 @@
 package com.arrow.contacts.activities;
 
-import android.Manifest;
-import android.content.ContentResolver;
+import android.content.ContentProviderOperation;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.provider.CallLog;
 import android.provider.ContactsContract;
-import android.support.annotation.NonNull;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.telecom.Call;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.support.v7.widget.Toolbar;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.arrow.contacts.R;
 import com.arrow.contacts.adapters.CallLogAdapter;
-import com.arrow.contacts.adapters.ContactAdapter;
 import com.arrow.contacts.adapters.DetailAdapter;
 import com.arrow.contacts.models.CallLogs;
 import com.arrow.contacts.models.Contact;
 import com.arrow.contacts.models.Detail;
+import com.arrow.contacts.models.Temp;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -69,7 +61,6 @@ public class ContactActivity extends AppCompatActivity {
     }
 
     @Override
-
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.view_contact, menu);
         return super.onCreateOptionsMenu(menu);
@@ -83,25 +74,11 @@ public class ContactActivity extends AppCompatActivity {
                 return true;
             case R.id.ic_action_delete:
                 deleteContact(person);
+                finish();
                 default:
         }
         return super.onOptionsItemSelected(item);
     }
-
-//    @Override
-//    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-//        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-//        switch (requestCode) {
-//            case 2:
-//                if (grantResults.length>0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-//                    readCallLog(person.getPhoneNumber(), person.getPhoneType());
-//                } else {
-//                    Toast.makeText(this, "You denied the permisssion", Toast.LENGTH_SHORT).show();
-//                }
-//                break;
-//            default:
-//        }
-//    }
 
     private void initFragment() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.contact_toolbar);
@@ -111,8 +88,21 @@ public class ContactActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
+                Intent intent = new Intent("com.arrow.contacts.activities.EDIT_START");
+                intent.putExtra("show_type", false);
+                intent.putExtra("id", person.getId());
+                Temp temp = new Temp(
+                        person.getName(),
+                        "",
+                        !person.getPhoneNumber().isEmpty() ? person.getPhoneNumber().get(0) : new String(""),
+                        !person.getPhoneType().isEmpty() ? person.getPhoneType().get(0) : 1,
+                        !person.getEmails().isEmpty() ? person.getEmails().get(0) : new String(""),
+                        !person.getEmailsType().isEmpty() ? person.getEmailsType().get(0) : 1
+                );
+                intent.putExtra(EditActivity.EDIT, temp);
+                startActivity(intent);
             }
         });
 
@@ -212,47 +202,6 @@ public class ContactActivity extends AppCompatActivity {
         recyclerView.setAdapter(detailAdapter);
     }
 
-    private void setDetailContent() {
-        Intent intent = getIntent();
-        person = (Contact) intent.getSerializableExtra(CONTACT);
-
-        for (int i=0; i<person.getPhoneNumber().size(); i++) {
-            Detail temp = new Detail(
-                    person.getPhoneNumber().get(i),
-                    person.getPhoneType().get(i),
-                    "0",
-                    R.drawable.ic_number,
-                    R.drawable.ic_message
-            );
-            mdetailList.add(temp);
-        }
-
-        for (int i=0; i<person.getEmails().size(); i++) {
-            Detail temp = new Detail(
-                    person.getEmails().get(i),
-                    person.getEmailsType().get(i),
-                    "@",
-                    R.drawable.ic_email,
-                    R.drawable.ic_message
-            );
-            mdetailList.add(temp);
-        }
-
-        CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
-        ImageView contactImageView = (ImageView) findViewById(R.id.contact_photo_image_view);
-
-        collapsingToolbarLayout.setTitle(person.getName());
-        contactImageView.setImageResource(person.getImageID());
-
-        // 显示联系人号码和邮箱地址
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.contact_detail_recycler_view);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        DetailAdapter detailAdapter = new DetailAdapter(mdetailList);
-
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setAdapter(detailAdapter);
-    }
-
     private void readCallLog() {
         String[] callLogProjection = new String[]{
                 CallLog.Calls.NUMBER,
@@ -269,17 +218,9 @@ public class ContactActivity extends AppCompatActivity {
                 CallLog.Calls.DEFAULT_SORT_ORDER
         );
 //
-        if (cursor.moveToFirst()) {
+        if (cursor != null && cursor.moveToFirst()) {
             int count = 0;
             do {
-//                Cursor numberTypeCursor = this.getContentResolver().query(
-//                        ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
-//                        new String[] { ContactsContract.CommonDataKinds.Phone.TYPE, ContactsContract.CommonDataKinds.Phone.NUMBER },
-//                        ContactsContract.CommonDataKinds.Phone.NUMBER + "='" + cursor.getString(cursor.getColumnIndex(CallLog.Calls.NUMBER)) + "'",
-//                        null,
-//                        null
-//                );
-//                numberTypeCursor.getInt(numberTypeCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.TYPE))
                 CallLogs temp = new CallLogs(
                         cursor.getString(cursor.getColumnIndex(CallLog.Calls.NUMBER)),
                         2,
@@ -295,6 +236,24 @@ public class ContactActivity extends AppCompatActivity {
     }
 
     private void deleteContact(Contact person) {
+        // 创建内容提供器操作列表
+        ArrayList<ContentProviderOperation> ops = new ArrayList<ContentProviderOperation>();
+        // 添加内容提供器操作，删除联系人在raw_contact和data表中的数据（才能彻底删除）
+        ops.add(
+                ContentProviderOperation.newDelete(ContactsContract.RawContacts.CONTENT_URI)
+                .withSelection(ContactsContract.RawContacts.CONTACT_ID + "=" + person.getId(), null)
+                .build()
+        );
+        ops.add(
+                ContentProviderOperation.newDelete(ContactsContract.Data.CONTENT_URI)
+                .withSelection(ContactsContract.Data.RAW_CONTACT_ID + "=" + person.getId(), null)
+                .build()
+        );
 
+        try {
+            getContentResolver().applyBatch(ContactsContract.AUTHORITY, ops);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
